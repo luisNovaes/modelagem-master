@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.luisnovaes.modelagem.domain.Categoria;
 import com.luisnovaes.modelagem.domain.Cidade;
+import com.luisnovaes.modelagem.domain.Cliente;
+import com.luisnovaes.modelagem.domain.Endereco;
 import com.luisnovaes.modelagem.domain.Estado;
 import com.luisnovaes.modelagem.domain.Produto;
+import com.luisnovaes.modelagem.domain.enums.TipoCliente;
 import com.luisnovaes.modelagem.repositories.CategoriaRepository;
 import com.luisnovaes.modelagem.repositories.CidadeRepository;
+import com.luisnovaes.modelagem.repositories.ClienteRepository;
+import com.luisnovaes.modelagem.repositories.EnderecoRepository;
 import com.luisnovaes.modelagem.repositories.EstadoRepository;
 import com.luisnovaes.modelagem.repositories.ProdutoRepository;
 
@@ -21,15 +26,17 @@ public class ModelagemApplication implements CommandLineRunner {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-
 	@Autowired
 	private ProdutoRepository produtoRepository;
-	
 	@Autowired
-	private EstadoRepository estadoRepository;
-	
+	private EstadoRepository estadoRepository;	
 	@Autowired
-	private CidadeRepository cidadeRepository;
+	private CidadeRepository cidadeRepository;	
+	@Autowired
+	private ClienteRepository clienteRepository;	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 
 	public static void main(String[] args) {
 		SpringApplication.run(ModelagemApplication.class, args);
@@ -66,6 +73,20 @@ public class ModelagemApplication implements CommandLineRunner {
 		
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
-
+		
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "3532363521",
+				TipoCliente.PESSOAFISICA);
+		
+		cli1.getTelefones().addAll(Arrays.asList("123456789", "789456123"));
+		
+		Endereco e1 = new Endereco(null, "Rua das Flores", "300", "Apto 303", "Jardim", "123456789",
+				cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "987654321",
+				cli1, c2);
+		
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 	}
 }
